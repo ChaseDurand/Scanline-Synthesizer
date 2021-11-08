@@ -17,18 +17,22 @@ TapSynthAudioProcessorEditor::TapSynthAudioProcessorEditor (TapSynthAudioProcess
 , osc2 (audioProcessor.apvts, "OSC2", "OSC2GAIN", "OSC2PITCH")
 , adsr (audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE")
 {
-    auto tapImage = juce::ImageCache::getFromMemory (BinaryData::tapLogo_png, BinaryData::tapLogo_pngSize);
     
-    if (tapImage.isValid())
-        logo.setImage (tapImage, juce::RectanglePlacement::stretchToFit);
+    juce::File gradientFile("/Users/chasedurand/Dev/ScanlineSynth/Assets/gradient1.jpg");
+    
+    auto gradientImage = juce::ImageCache::getFromFile(gradientFile);
+    gradientImage = gradientImage.rescaled(1024, 1024);
+    std::cout << gradientImage.getPixelAt(0, 0).getRed();
+    
+    if (gradientImage.isValid())
+        gradient.setImage(gradientImage, juce::RectanglePlacement::stretchToFit);
     else
         jassertfalse;
     
     addAndMakeVisible (osc1);
     addAndMakeVisible (osc2);
     addAndMakeVisible (adsr);
-    addAndMakeVisible (logo);
-    
+    addAndMakeVisible (gradient);
     osc1.setName ("Oscillator 1");
     osc2.setName ("Oscillator 2");
     adsr.setName ("ADSR");
@@ -40,7 +44,7 @@ TapSynthAudioProcessorEditor::TapSynthAudioProcessorEditor (TapSynthAudioProcess
         
     
     startTimerHz (30);
-    setSize (1080, 525);
+    setSize (800, 600);
 }
 
 TapSynthAudioProcessorEditor::~TapSynthAudioProcessorEditor()
@@ -56,12 +60,15 @@ void TapSynthAudioProcessorEditor::paint (juce::Graphics& g)
 
 void TapSynthAudioProcessorEditor::resized()
 {
-    const auto oscWidth = 420;
-    const auto oscHeight = 180;
-    osc1.setBounds (0, 0, oscWidth, oscHeight);
-    osc2.setBounds (0, osc1.getBottom(), oscWidth, oscHeight);
-    adsr.setBounds (osc1.getRight(), 0, 230, 360);
-    logo.setBounds (osc2.getBottom(), osc2.getBottom() + 30, 250, 100);
+    int margin = 5;
+    
+    gradient.setBounds(margin, margin, 350, 350);
+    
+    const auto oscWidth = 350;
+    const auto oscHeight = 150;
+    osc1.setBounds (gradient.getRight()+margin, margin, oscWidth, oscHeight);
+    osc2.setBounds (gradient.getRight()+margin, osc1.getBottom()+margin, oscWidth, oscHeight);
+    adsr.setBounds (margin, gradient.getBottom()+margin, 350, 150);
 }
 
 void TapSynthAudioProcessorEditor::timerCallback()

@@ -40,4 +40,3 @@ void AdsrComponent::resized()
     sustain.setBounds (decay.getRight(), startY, width, height);
     release.setBounds (sustain.getRight(), startY, width, height);
 }
-

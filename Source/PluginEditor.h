@@ -35,7 +35,7 @@ private:
     OscComponent osc1;
     OscComponent osc2;
     AdsrComponent adsr;
-    juce::ImageComponent logo;
+    juce::ImageComponent gradient;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TapSynthAudioProcessorEditor)
 };

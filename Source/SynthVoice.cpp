@@ -120,23 +120,5 @@ void SynthVoice::reset()
 
 void SynthVoice::updateModParams (const int filterType, const float filterCutoff, const float filterResonance, const float adsrDepth, const float lfoFreq, const float lfoDepth)
 {
-//    auto cutoff = (adsrDepth * filterAdsrOutput) + filterCutoff;
-//    cutoff = std::clamp<float> (cutoff, 20.0f, 20000.0f);
-//
-//    for (int ch = 0; ch < numChannelsToProcess; ++ch)
-//    {
-//        filter[ch].setParams (filterType, cutoff, filterResonance);
-//    }
-    
-//    auto cutoff = (adsrDepth * adsr.getNextSample()) + filterCutoff;
-//
-//    DBG (cutoff);
-//
-//    for (int ch = 0; ch < numChannelsToProcess; ++ch)
-//    {
-//        lfo[ch].setFrequency (lfoFreq);
-//        //cutoff = (lfoDepth * lfoOutput[ch]) + cutoff;
-//        cutoff = std::clamp<float> (cutoff, 20.0f, 20000.0f);
-//        filter[ch].setParams (filterType, cutoff, filterResonance);
-//    }
+
 }

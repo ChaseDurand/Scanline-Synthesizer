@@ -4,7 +4,7 @@
 
 namespace Assets
 {
-    extern const char*  tapLogo_png;
-    const int           tapLogo_pngSize = 30362;
+    extern const char*  gradient1_jpg;
+    const int           gradient1_jpgSize = 30362;
 
 }
