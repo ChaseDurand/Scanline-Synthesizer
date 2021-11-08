@@ -25,66 +25,34 @@ void OscData::prepareToPlay (double sampleRate, int samplesPerBlock, int outputC
 
 void OscData::setType (const int oscSelection)
 {
+    juce::File gradientFile("/Users/chasedurand/Dev/ScanlineSynth/Assets/gradient1.jpg"); // TODO replace with variable file selector
+    auto gradientImage = juce::ImageCache::getFromFile(gradientFile);
+    gradientImage = gradientImage.rescaled(1024, 1024);
+    std::vector<int> scanRaw;
     switch (oscSelection)
     {
-        // Sine
+        // Red
         case 0:
-            initialise ([](float x) { return 1.5 * std::tanh(std::sin (x)); });
+            for (int i=1; i<=1024; i++){
+                scanRaw.push_back(gradientImage.getPixelAt(i, 0).getRed());
+            }
             break;
             
-        // Saw
+        // Blue
         case 1:
         {
-            // initialise ([] (float x) { return x / juce::MathConstants<float>::pi; });
-            //initialise ([] (float x) { return x / juce::MathConstants<float>::pi; }, 4);
-            //initialise ([](float x) { return 10.0 * std::tanh(std::sin (x)); },8);
-            
-            
-            juce::File gradientFile("/Users/chasedurand/Dev/ScanlineSynth/Assets/gradient1.jpg");
-            auto gradientImage = juce::ImageCache::getFromFile(gradientFile);
-            gradientImage = gradientImage.rescaled(1024, 1024);
-            std::vector<int> scanRed;
-            //int scanRed[1024]={};
             for (int i=1; i<=1024; i++){
-                scanRed.push_back(gradientImage.getPixelAt(i, 0).getRed());
+                scanRaw.push_back(gradientImage.getPixelAt(i, 0).getBlue());
             }
-            // Rescale range from min,max to -1.0,1.0
-            auto redMin = *std::min_element(scanRed.begin(), scanRed.end());
-            auto redMax = *std::max_element(scanRed.begin(), scanRed.end());
-            std::cout << redMin << redMax << std::endl;
-            float scaledRed[1024];
-            for (int i=0; i < 1024; i++){
-                scaledRed[i] = ((2.0)*(scanRed[i]-redMin) / (redMax - redMin)) -1.0;
-            }
-            initialise ([scaledRed](float x) { return scaledRed[(int) (((x+juce::MathConstants<float>::pi)*1023.0) / (2*juce::MathConstants<float>::pi))]; },1024); // Replace with LERP
             break;
         }
           
-        // Square
+        // Green
         case 2:
         {
-            // initialise ([] (float x) { return x < 0.0f ? -1.0f : 1.0f; });
-            
-            
-            
-            juce::File gradientFile("/Users/chasedurand/Dev/ScanlineSynth/Assets/gradient1.jpg");
-            auto gradientImage = juce::ImageCache::getFromFile(gradientFile);
-            gradientImage = gradientImage.rescaled(1024, 1024);
-            std::vector<int> scanRed;
-            //int scanRed[1024]={};
             for (int i=1; i<=1024; i++){
-                scanRed.push_back(gradientImage.getPixelAt(i, 0).getBlue());
+                scanRaw.push_back(gradientImage.getPixelAt(i, 0).getGreen());
             }
-            // Rescale range from min,max to -1.0,1.0
-            auto redMin = *std::min_element(scanRed.begin(), scanRed.end());
-            auto redMax = *std::max_element(scanRed.begin(), scanRed.end());
-            std::cout << redMin << redMax << std::endl;
-            float scaledRed[1024];
-            for (int i=0; i < 1024; i++){
-                scaledRed[i] = ((2.0)*(scanRed[i]-redMin) / (redMax - redMin)) -1.0;
-            }
-            initialise ([scaledRed](float x) { return scaledRed[(int) (((x+juce::MathConstants<float>::pi)*1023.0) / (2*juce::MathConstants<float>::pi))]; },1024); // Replace with LERP
-            
             break;
         }
         default:
@@ -92,6 +60,14 @@ void OscData::setType (const int oscSelection)
             jassertfalse;
             break;
     }
+    // Rescale range from min,max to -1.0,1.0
+    auto scanMin = *std::min_element(scanRaw.begin(), scanRaw.end());
+    auto scanMax = *std::max_element(scanRaw.begin(), scanRaw.end());
+    float scanScaled[1024];
+    for (int i=0; i < 1024; i++){
+        scanScaled[i] = ((2.0)*(scanRaw[i]-scanMin) / (scanMax - scanMin)) -1.0;
+    }
+    initialise ([scanScaled](float x) { return scanScaled[(int) (((x+juce::MathConstants<float>::pi)*1023.0) / (2*juce::MathConstants<float>::pi))]; },1024); // TODO Replace with LERP
 }
 
 void OscData::setGain (const float levelInDecibels)
