@@ -34,6 +34,7 @@ private:
     TapSynthAudioProcessor& audioProcessor;
     OscComponent osc1;
     OscComponent osc2;
+    OscComponent osc3;
     AdsrComponent adsr;
     juce::ImageComponent gradient;
 

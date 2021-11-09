@@ -16,7 +16,7 @@ OscComponent::OscComponent (juce::AudioProcessorValueTreeState& apvts, juce::Str
 : gain ("Gain", gainId, apvts, dialWidth, dialHeight)
 , pitch ("Pitch", pitchId, apvts, dialWidth, dialHeight)
 {
-    juce::StringArray oscChoices { "Sine", "Saw", "Square" };
+    juce::StringArray oscChoices { "Red", "Green", "Blue" };
     oscSelector.addItemList (oscChoices, 1);
     oscSelector.setSelectedItemIndex (0);
     addAndMakeVisible (oscSelector);

@@ -21,6 +21,7 @@ void SynthVoice::startNote (int midiNoteNumber, float velocity, juce::Synthesise
     {
         osc1[i].setFreq (midiNoteNumber);
         osc2[i].setFreq (midiNoteNumber);
+        osc3[i].setFreq (midiNoteNumber);
     }
     
     adsr.noteOn();
@@ -59,6 +60,7 @@ void SynthVoice::prepareToPlay (double sampleRate, int samplesPerBlock, int outp
     {
         osc1[ch].prepareToPlay (sampleRate, samplesPerBlock, outputChannels);
         osc2[ch].prepareToPlay (sampleRate, samplesPerBlock, outputChannels);
+        osc3[ch].prepareToPlay (sampleRate, samplesPerBlock, outputChannels);
     }
     
     gain.prepare (spec);
@@ -85,7 +87,7 @@ void SynthVoice::renderNextBlock (juce::AudioBuffer< float > &outputBuffer, int 
         
         for (int s = 0; s < synthBuffer.getNumSamples(); ++s)
         {
-            buffer[s] = osc1[ch].processNextSample (buffer[s]) + osc2[ch].processNextSample (buffer[s]);
+            buffer[s] = osc1[ch].processNextSample (buffer[s]) + osc2[ch].processNextSample (buffer[s]) + osc3[ch].processNextSample (buffer[s]);
         }
     }
     

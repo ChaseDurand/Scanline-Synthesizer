@@ -201,16 +201,19 @@ juce::AudioProcessorValueTreeState::ParameterLayout TapSynthAudioProcessor::crea
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     
     // OSC select
-    params.push_back (std::make_unique<juce::AudioParameterChoice> ("OSC1", "Oscillator 1", juce::StringArray { "Sine", "Saw", "Square" }, 0));
-    params.push_back (std::make_unique<juce::AudioParameterChoice> ("OSC2", "Oscillator 2", juce::StringArray { "Sine", "Saw", "Square" }, 0));
+    params.push_back (std::make_unique<juce::AudioParameterChoice> ("OSC1", "Oscillator 1", juce::StringArray { "Red", "Green", "Blue" }, 0));
+    params.push_back (std::make_unique<juce::AudioParameterChoice> ("OSC2", "Oscillator 2", juce::StringArray { "Red", "Green", "Blue" }, 0));
+    params.push_back (std::make_unique<juce::AudioParameterChoice> ("OSC3", "Oscillator 3", juce::StringArray { "Red", "Green", "Blue" }, 0));
     
     // OSC Gain
-    params.push_back (std::make_unique<juce::AudioParameterFloat>("OSC1GAIN", "Oscillator 1 Gain", juce::NormalisableRange<float> { -40.0f, 0.2f, 0.1f }, 0.1f, "dB"));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>("OSC2GAIN", "Oscillator 2 Gain", juce::NormalisableRange<float> { -40.0f, 0.2f, 0.1f }, 0.1f, "dB"));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("OSC1GAIN", "Oscillator 1 Gain", juce::NormalisableRange<float> { -50.0f, 0.2f, 0.1f }, 0.1f, "dB"));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("OSC2GAIN", "Oscillator 2 Gain", juce::NormalisableRange<float> { -50.0f, 0.2f, 0.1f }, 0.1f, "dB"));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("OSC3GAIN", "Oscillator 3 Gain", juce::NormalisableRange<float> { -50.0f, 0.2f, 0.1f }, 0.1f, "dB"));
     
     // OSC Pitch val
     params.push_back (std::make_unique<juce::AudioParameterInt>("OSC1PITCH", "Oscillator 1 Pitch", -24, 24, 0));
     params.push_back (std::make_unique<juce::AudioParameterInt>("OSC2PITCH", "Oscillator 2 Pitch", -24, 24, 0));
+    params.push_back (std::make_unique<juce::AudioParameterInt>("OSC3PITCH", "Oscillator 3 Pitch", -24, 24, 0));
     
     // ADSR
     params.push_back (std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 0.1f));
@@ -240,17 +243,22 @@ void TapSynthAudioProcessor::setVoiceParams()
             auto& release = *apvts.getRawParameterValue ("RELEASE");
             auto& osc1Choice = *apvts.getRawParameterValue ("OSC1");
             auto& osc2Choice = *apvts.getRawParameterValue ("OSC2");
+            auto& osc3Choice = *apvts.getRawParameterValue ("OSC3");
             auto& osc1Gain = *apvts.getRawParameterValue ("OSC1GAIN");
             auto& osc2Gain = *apvts.getRawParameterValue ("OSC2GAIN");
+            auto& osc3Gain = *apvts.getRawParameterValue ("OSC3GAIN");
             auto& osc1Pitch = *apvts.getRawParameterValue ("OSC1PITCH");
             auto& osc2Pitch = *apvts.getRawParameterValue ("OSC2PITCH");
+            auto& osc3Pitch = *apvts.getRawParameterValue ("OSC3PITCH");
             auto& osc1 = voice->getOscillator1();
             auto& osc2 = voice->getOscillator2();
+            auto& osc3 = voice->getOscillator3();
             auto& adsr = voice->getAdsr();
             for (int i = 0; i < getTotalNumOutputChannels(); i++)
             {
                 osc1[i].setParams (osc1Choice, osc1Gain, osc1Pitch);
                 osc2[i].setParams (osc2Choice, osc2Gain, osc2Pitch);
+                osc3[i].setParams (osc3Choice, osc3Gain, osc3Pitch);
             }
             
             adsr.update (attack.load(), decay.load(), sustain.load(), release.load());

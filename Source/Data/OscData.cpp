@@ -25,6 +25,8 @@ void OscData::prepareToPlay (double sampleRate, int samplesPerBlock, int outputC
 
 void OscData::setType (const int oscSelection)
 {
+    if(isInitialised()) return;
+    
     juce::File gradientFile("/Users/chasedurand/Dev/ScanlineSynth/Assets/gradient1.jpg"); // TODO replace with variable file selector
     auto gradientImage = juce::ImageCache::getFromFile(gradientFile);
     gradientImage = gradientImage.rescaled(1024, 1024);
@@ -38,20 +40,20 @@ void OscData::setType (const int oscSelection)
             }
             break;
             
-        // Blue
+        // Green
         case 1:
         {
             for (int i=1; i<=1024; i++){
-                scanRaw.push_back(gradientImage.getPixelAt(i, 0).getBlue());
+                scanRaw.push_back(gradientImage.getPixelAt(i, 0).getGreen());
             }
             break;
         }
           
-        // Green
+        // Blue
         case 2:
         {
             for (int i=1; i<=1024; i++){
-                scanRaw.push_back(gradientImage.getPixelAt(i, 0).getGreen());
+                scanRaw.push_back(gradientImage.getPixelAt(i, 0).getBlue());
             }
             break;
         }
